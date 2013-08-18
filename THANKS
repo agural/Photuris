@@ -1,0 +1,15 @@
+Special thanks to:
+
+arduino - the guys who created the framework this is based off
+https://github.com/arduino/Arduino
+
+damellis - the guy who created pins_arduino.h for tiny8 and tiny14 chips
+https://github.com/damellis/attiny
+
+omnidan - the guy who created ArduinoPure
+https://github.com/omnidan/ArduinoPure
+
+Patrick Sebastien - A great tutorial on getting started with using bootloaders
+for AVR chips
+http://www.workinprogress.ca/v-usb-tutorial-software-only-usb-for-mega-tiny
+
