@@ -7,12 +7,7 @@
  * Author: Albert Gural
  */ 
 
-
-#undef  F_CPU
-#define	F_CPU 12000000UL
-#define	sbi(port, pbit)	(port) |= (1 << (pbit))
-#define	cbi(port, pbit)	(port) &= ~(1 << (pbit))
-#define gbi(port, pbit) ((port >> pbit) & 1) 
+#include "Arduino.h"
 
 #include <math.h>
 #include <avr/io.h>
@@ -23,11 +18,16 @@
 #include <avr/interrupt.h>
 #include <CapSense.h>
 #include <Wire.h>
-//#include <SPI.h>
+
+#undef  F_CPU
+#define	F_CPU 12000000UL
+#define	sbi(port, pbit)	(port) |= (1 << (pbit))
+#define	cbi(port, pbit)	(port) &= ~(1 << (pbit))
+#define gbi(port, pbit) ((port >> pbit) & 1) 
 
 /*FUSES = { 
     .low =	0xD6, 
-    .high =	0xDD, 
+    .high =	0xD5, 
     .extended = 0xF9, 
 };*/
 
