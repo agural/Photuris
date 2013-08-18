@@ -167,14 +167,12 @@ double slider() {
 /********** CREE XM-L2 U2 LED DRIVING **********/
 
 #define POT_ADDRESS 0x2A // Address 0b0010101, write 0b0
- byte POT_wiper_0 = 0x00; // Address 0b0000, write 0b00, data MSB 0b00
- byte POT_wiper_1 = 0x10; // Address 0b0001, write 0b00, data MSB 0b00
- byte POT_TCONrs1 = 0x41; // Address 0b0100, write 0b00, data MSB 0b00
- byte POT_TCONrs2 = 0xFF; // TCON Data LSB 0b11111111
- byte POT_TCONrc1 = 0x40; // Address 0b0100, write 0b00, data MSB 0b00
- byte POT_TCONrc2 = 0x00; // TCON Data LSB 0b11111111
-
-// TODO: Set TWBR to 52 (0x34) for 100kHz clock?
+byte POT_wiper_0 = 0x00; // Address 0b0000, write 0b00, data MSB 0b00
+byte POT_wiper_1 = 0x10; // Address 0b0001, write 0b00, data MSB 0b00
+byte POT_TCONrs1 = 0x41; // Address 0b0100, write 0b00, data MSB 0b00
+byte POT_TCONrs2 = 0xFF; // TCON Data LSB 0b11111111
+byte POT_TCONrc1 = 0x40; // Address 0b0100, write 0b00, data MSB 0b00
+byte POT_TCONrc2 = 0x00; // TCON Data LSB 0b11111111
 
 void setup_POT() {
     Wire.begin();
@@ -655,5 +653,4 @@ void loop() {
     }
     */
 }
-
 
