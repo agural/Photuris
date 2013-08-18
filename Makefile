@@ -1,13 +1,19 @@
-# The Arduino Mega seems to work with the stk500v2 programmer protocol only.
-# TODO: Confirm this (^) with a test on another system and fresh Arduino Mega bootloader.
-MCU=atmega168p                      # Select your MCU here. Arduino Mega has the atmega2560 mcu. For the MCUs of other Arduino boards, please consult arduino.cc
-CPU=12000000L                       # 12 MHz (arduino has an external clock, this should be the same on most Arduino boards)
-SOURCES_PROJECT=src/photuris.ino    # Add project source files here
-PROJECT_NAME=photuris               # result will be main.hex, then
-PROGRAMMER=usbasp                   # set your programmer here, I use the stk500. On the standard arduino isp it's "arduino".
-PORT=/dev/ttyACM0                   # set the port for the connection to your programmer here. Arduino sits at /dev/ttyACM0
-AP_PATH=./
-BAUDRATE=115200
+# Albert Gural
+# e: ag@albertgural.com
+# w: http://albertgural.com
+# d: 2013/08/18 - 2013/08/18
+
+MCU=m168p                           # ATmega168PA MCU.
+CPU=12000000L                       # 12 MHz external clock.
+SOURCES_PROJECT=src/photuris.ino    # Photuris.ino source file.
+PROJECT_NAME=photuris               # Result will be photuris.hex.
+PROGRAMMER=usbasp                   # USBasp programmer (see http://www.fischl.de/usbasp).
+PORT=usb                            # USB Port for USBasp programer.
+AP_PATH=./                          # Project directory root.
+BAUDRATE=115200                     # Programming Baud rate.
+LFUSE=0xD6                          # External full-swing crystal, no clock speed division
+HFUSE=0xD5                          # WDT not always on, EEPROM save on reprogram, BOD=2.7V
+EFUSE=0xF9                          # Bootloader 1024 words (app: 0x000-0xBFF, boot: 0xC00-0xFFF)
 
 CC=$(AP_PATH)tools/avr/bin/avr-gcc
 CCP=$(AP_PATH)tools/avr/bin/avr-g++
@@ -57,4 +63,11 @@ clean_results:
 clean: clean_obj clean_results
 
 upload:
-	$(AVRDUDE) $(AVRDUDEFLAGS) -Uflash:w:$(HEXCODE):i
+	$(AVRDUDE) $(AVRDUDEFLAGS) -U flash:w:$(HEXCODE):i
+
+fuse:
+	$(AVRDUDE) $(AVRDUDEFLAGS) -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m -U efuse:w:$(EFUSE):m
+
+bootload:
+	$(AVRDUDE) $(AVRDUDEFLAGS) -U flash:w:$(HEXCODE):i
+
