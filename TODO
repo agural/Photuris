@@ -2,7 +2,6 @@ Here are the items that still need to be worked out:
 
 * Updating README.md.
 * Updating Makefile (needs correct port, FUSES, etc).
-* Adding CapSense library to /arduino.
 * Pulling out all auxiliary library functions to /lib.
 * Merging in the bootloading tools (both initial loading of the bootloading
   files and allowing bootloading later on).
