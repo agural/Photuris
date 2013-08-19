@@ -29,18 +29,18 @@ ARFILE=$(AP_PATH)arduino/core.a
 OBJECTS_PROJECT=$(SOURCES_PROJECT:.cpp=.o)
 SOURCES_ARDUINO_C=$(AP_PATH)arduino/wiring_digital.c $(AP_PATH)arduino/WInterrupts.c $(AP_PATH)arduino/wiring_pulse.c $(AP_PATH)arduino/wiring_analog.c $(AP_PATH)arduino/wiring.c $(AP_PATH)arduino/wiring_shift.c
 OBJECTS_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.o)
-SOURCES_ARDUINO_CPP=$(AP_PATH)arduino/CapacitiveSensor.cpp $(AP_PATH)arduino/CDC.cpp $(AP_PATH)arduino/Stream.cpp $(AP_PATH)arduino/HID.cpp $(AP_PATH)arduino/Tone.cpp $(AP_PATH)arduino/WMath.cpp $(AP_PATH)arduino/WString.cpp $(AP_PATH)arduino/new.cpp $(AP_PATH)arduino/main.cpp $(AP_PATH)arduino/HardwareSerial.cpp $(AP_PATH)arduino/IPAddress.cpp $(AP_PATH)arduino/Print.cpp $(AP_PATH)arduino/USBCore.cpp
+SOURCES_ARDUINO_CPP=$(AP_PATH)arduino/Wire.cpp $(AP_PATH)arduino/CapacitiveSensor.cpp $(AP_PATH)arduino/CDC.cpp $(AP_PATH)arduino/Stream.cpp $(AP_PATH)arduino/HID.cpp $(AP_PATH)arduino/Tone.cpp $(AP_PATH)arduino/WMath.cpp $(AP_PATH)arduino/WString.cpp $(AP_PATH)arduino/new.cpp $(AP_PATH)arduino/main.cpp $(AP_PATH)arduino/HardwareSerial.cpp $(AP_PATH)arduino/IPAddress.cpp $(AP_PATH)arduino/Print.cpp $(AP_PATH)arduino/USBCore.cpp
 OBJECTS_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.o)
 OBJECTS=$(OBJECTS_PROJECT) $(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 OBJECTS_CORE=$(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 ELFCODE=$(join $(PROJECT_NAME),.elf)
 EEPCODE=$(join $(PROJECT_NAME),.eep)
 HEXCODE=$(join $(PROJECT_NAME),.hex)
-D_PROJECT=$(SOURCES_PROJECT:.cpp=.d)
-D_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.d)
-D_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.d)
-DFILE=$(D_PROJECT) $(D_ARDUINO_C) $(D_ARDUINO_CPP)
-DCODE=$(join $(PROJECT_NAME),.d)
+DEBUG_PROJECT=$(SOURCES_PROJECT:.cpp=.d)
+DEBUG_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.d)
+DEBUG_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.d)
+DEBUG=$(DEBUG_PROJECT) $(DEBUG_ARDUINO_C) $(DEBUG_ARDUINO_CPP)
+DBGCODE=$(join $(PROJECT_NAME),.d)
 
 $(ARFILE): $(OBJECTS)
 	$(AR) $(ARFILE) $(OBJECTS)
@@ -58,10 +58,10 @@ $(HEXCODE):
 	$(OBJ) $(HEXFLAGS) $(ELFCODE) $@
 
 clean_obj:
-	rm -rf $(OBJECTS) $(ARFILE) $(DFILE)
+	rm -rf $(OBJECTS) $(ARFILE) $(DEBUG)
 
 clean_results:
-	rm -rf $(ELFCODE) $(EEPCODE) $(HEXCODE) $(DCODE)
+	rm -rf $(ELFCODE) $(EEPCODE) $(HEXCODE) $(DBGCODE)
 
 clean: clean_obj clean_results
 
