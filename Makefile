@@ -3,13 +3,13 @@
 # w: http://albertgural.com
 # d: 2013/08/18 - 2013/08/18
 
-MCU=atmega168p                      # ATmega168PA MCU.
+MCU=atmega168p                      # ATmega168 MCU.
 CPU=12000000L                       # 12 MHz external clock.
 SOURCES_PROJECT=src/photuris.cpp    # Photuris.ino source file.
 PROJECT_NAME=photuris               # Result will be photuris.hex.
 PROGRAMMER=usbasp                   # USBasp programmer (see http://www.fischl.de/usbasp).
 PORT=usb                            # USB Port for USBasp programer.
-AP_PATH=./                          # Project directory root.
+AP_PATH=./
 BAUDRATE=115200                     # Programming Baud rate.
 LFUSE=0xD6                          # External full-swing crystal, no clock speed division
 HFUSE=0xD5                          # WDT not always on, EEPROM save on reprogram, BOD=2.7V
@@ -20,7 +20,7 @@ CCP=avr-g++
 AR=avr-ar rcs
 OBJ=avr-objcopy
 AVRDUDE=avrdude
-AVRDUDEFLAGS=-c$(PROGRAMMER) -p$(MCU) -P$(PORT) -C$(AP_PATH)tools/avrdude.conf -b$(BAUDRATE)
+AVRDUDEFLAGS=-c $(PROGRAMMER) -p $(MCU) -P $(PORT) -C $(AP_PATH)tools/avrdude.conf -b $(BAUDRATE)
 EEPFLAGS=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
 HEXFLAGS=-O ihex -R .eeprom
 CFLAGS=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=$(CPU) -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=101 -I$(AP_PATH)arduino -I$(AP_PATH)arduino/variants/standard
@@ -36,6 +36,11 @@ OBJECTS_CORE=$(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 ELFCODE=$(join $(PROJECT_NAME),.elf)
 EEPCODE=$(join $(PROJECT_NAME),.eep)
 HEXCODE=$(join $(PROJECT_NAME),.hex)
+D_PROJECT=$(SOURCES_PROJECT:.cpp=.d)
+D_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.d)
+D_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.d)
+DFILE=$(D_PROJECT) $(D_ARDUINO_C) $(D_ARDUINO_CPP)
+DCODE=$(join $(PROJECT_NAME),.d)
 
 $(ARFILE): $(OBJECTS)
 	$(AR) $(ARFILE) $(OBJECTS)
@@ -53,10 +58,10 @@ $(HEXCODE):
 	$(OBJ) $(HEXFLAGS) $(ELFCODE) $@
 
 clean_obj:
-	rm -rf $(OBJECTS) $(ARFILE)
+	rm -rf $(OBJECTS) $(ARFILE) $(DFILE)
 
 clean_results:
-	rm -rf $(ELFCODE) $(EEPCODE) $(HEXCODE)
+	rm -rf $(ELFCODE) $(EEPCODE) $(HEXCODE) $(DCODE)
 
 clean: clean_obj clean_results
 

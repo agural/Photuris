@@ -16,7 +16,7 @@
 #include <avr/power.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <CapSense.h>
+#include <CapacitiveSensor.h>
 #include <Wire.h>
 
 #undef  F_CPU
@@ -69,6 +69,17 @@
 long displayLED = 0;
 int  mode = 0;
 
+void delay_us(uint16_t count) {
+    while(count--) {
+        _delay_us(1);
+    }
+}
+
+void delay_ms(uint16_t count) {
+    while(count--) {
+        _delay_ms(1);
+    }
+}
 
 /********** CAPACITIVE TOUCH SENSORS **********/
 
@@ -81,16 +92,16 @@ int  mode = 0;
 #define slide_S8 1
 #define slide_S9 1
 
-CapSense csM0 = CapSense(slide_MB, slide_MA);
-CapSense csM1 = CapSense(slide_MA, slide_MB);
-CapSense csS0 = CapSense(slide_S9, slide_S0);
-CapSense csS9 = CapSense(slide_S0, slide_S9);
-CapSense csLL = CapSense(slide_S6, slide_S8);
-CapSense csLR = CapSense(slide_S8, slide_S6);
-CapSense csML = CapSense(slide_S3, slide_S6);
-CapSense csMR = CapSense(slide_S6, slide_S3);
-CapSense csRL = CapSense(slide_S1, slide_S3);
-CapSense csRR = CapSense(slide_S3, slide_S1);
+CapacitiveSensor csM0 = CapacitiveSensor(slide_MB, slide_MA);
+CapacitiveSensor csM1 = CapacitiveSensor(slide_MA, slide_MB);
+CapacitiveSensor csS0 = CapacitiveSensor(slide_S9, slide_S0);
+CapacitiveSensor csS9 = CapacitiveSensor(slide_S0, slide_S9);
+CapacitiveSensor csLL = CapacitiveSensor(slide_S6, slide_S8);
+CapacitiveSensor csLR = CapacitiveSensor(slide_S8, slide_S6);
+CapacitiveSensor csML = CapacitiveSensor(slide_S3, slide_S6);
+CapacitiveSensor csMR = CapacitiveSensor(slide_S6, slide_S3);
+CapacitiveSensor csRL = CapacitiveSensor(slide_S1, slide_S3);
+CapacitiveSensor csRR = CapacitiveSensor(slide_S3, slide_S1);
 
 double main_switch(int samples) {
     long total = 0;
@@ -98,14 +109,14 @@ double main_switch(int samples) {
         // Inner Switch
         pinMode(slide_MA, INPUT);
         pinMode(slide_MB, OUTPUT);
-        total += csM0.capSense(10);
-        _delay_us(5);
+        total += csM0.capacitiveSensor(10);
+        delay_us(5);
         
         // Outer Switch
         pinMode(slide_MB, INPUT);
         pinMode(slide_MA, OUTPUT);
-        total += csM1.capSense(10);
-        _delay_us(5);
+        total += csM1.capacitiveSensor(10);
+        delay_us(5);
     }
     return total;
 }
@@ -117,14 +128,14 @@ int button09(int samples, int threshold) {
         // Slide 0
         pinMode(slide_S0, INPUT);
         pinMode(slide_S9, OUTPUT);
-        total1 += csS0.capSense(10);
-        _delay_us(5);
+        total1 += csS0.capacitiveSensor(10);
+        delay_us(5);
         
         // Slide 9
         pinMode(slide_S9, INPUT);
         pinMode(slide_S0, OUTPUT);
-        total2 += csS9.capSense(10);
-        _delay_us(5);
+        total2 += csS9.capacitiveSensor(10);
+        delay_us(5);
     }
     int result = 0;
     if(total1 >= threshold * samples) sbi(result, 0);
@@ -152,7 +163,7 @@ double slider() {
         pinMode(slide_A, OUTPUT);
         pinMode(slide_B, INPUT);
         total1 += csr.capSense(10);
-        _delay_us(10);
+        delay_us(10);
         pinMode(slide_A, INPUT);
         pinMode(slide_B, OUTPUT);
         total2 += csl.capSense(10);
@@ -236,7 +247,7 @@ void led_off(int time) {
     cbi(PORTD, 3);
     cbi(PORTD, 5);
     cbi(PORTD, 6);
-    _delay_us(time);
+    delay_us(time);
     cbi(DDRB,  1);
     cbi(DDRB,  2);
     cbi(DDRD,  3);
@@ -264,7 +275,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  5);
             sbi(PORTD, 3);
             cbi(PORTD, 5);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -274,7 +285,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  3);
             sbi(PORTD, 5);
             cbi(PORTD, 3);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -284,7 +295,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  2);
             sbi(PORTD, 5);
             cbi(PORTB, 2);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -294,7 +305,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  1);
             sbi(PORTD, 5);
             cbi(PORTB, 1);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -304,7 +315,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  6);
             sbi(PORTD, 5);
             cbi(PORTD, 6);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -314,7 +325,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  5);
             sbi(PORTD, 6);
             cbi(PORTD, 5);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -324,7 +335,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  1);
             sbi(PORTD, 6);
             cbi(PORTB, 1);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -334,7 +345,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  2);
             sbi(PORTD, 6);
             cbi(PORTB, 2);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -344,7 +355,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  3);
             sbi(PORTD, 6);
             cbi(PORTD, 3);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -354,7 +365,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  6);
             sbi(PORTD, 3);
             cbi(PORTD, 6);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -364,7 +375,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  1);
             sbi(PORTB, 2);
             cbi(PORTB, 1);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -374,7 +385,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  2);
             sbi(PORTB, 1);
             cbi(PORTB, 2);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -384,7 +395,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  3);
             sbi(PORTB, 1);
             cbi(PORTD, 3);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -394,7 +405,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  5);
             sbi(PORTB, 1);
             cbi(PORTD, 5);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -404,7 +415,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  6);
             sbi(PORTB, 1);
             cbi(PORTD, 6);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -414,7 +425,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  2);
             sbi(PORTD, 3);
             cbi(PORTB, 2);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -424,7 +435,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRB,  1);
             sbi(PORTD, 3);
             cbi(PORTB, 1);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
@@ -434,7 +445,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  3);
             sbi(PORTB, 2);
             cbi(PORTD, 3);
-            _delay_us(p/2);
+            delay_us(p/2);
             led_off(50-p/2);
         }
         else led_off(50);
@@ -444,7 +455,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  5);
             sbi(PORTB, 2);
             cbi(PORTD, 5);
-            _delay_us(p/4);
+            delay_us(p/4);
             led_off(50-p/4);
         }
         else led_off(50);
@@ -454,7 +465,7 @@ void display_led(unsigned long led, int time, int p) {
             sbi(DDRD,  6);
             sbi(PORTB, 2);
             cbi(PORTD, 6);
-            _delay_us(p);
+            delay_us(p);
             led_off(50-p);
         }
         else led_off(50);
