@@ -24,12 +24,13 @@ AVRDUDEFLAGS=-c $(PROGRAMMER) -p $(MCU) -P $(PORT) -C $(AP_PATH)tools/avrdude.co
 EEPFLAGS=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
 HEXFLAGS=-O ihex -R .eeprom
 CFLAGS=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=$(CPU) -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=101 -I$(AP_PATH)arduino -I$(AP_PATH)arduino/variants/standard
-LDFLAGS=-Os -Wl,--gc-sections -mmcu=$(MCU) -L$(AP_PATH)arduino -L$(AP_PATH) -lm
+LDFLAGS=-Os -Wl,--gc-sections -mmcu=$(MCU) -L$(AP_PATH)arduino -L$(AP_PATH) -L$(AP_PATH) -lm
+INCLUDE=-I$(AP_PATH)arduino/libraries/CapacitiveSensor -I$(AP_PATH)arduino/libraries/Wire/utility -I$(AP_PATH)arduino/libraries/Wire
 ARFILE=$(AP_PATH)arduino/core.a
 OBJECTS_PROJECT=$(SOURCES_PROJECT:.cpp=.o)
-SOURCES_ARDUINO_C=$(AP_PATH)arduino/wiring_digital.c $(AP_PATH)arduino/WInterrupts.c $(AP_PATH)arduino/wiring_pulse.c $(AP_PATH)arduino/wiring_analog.c $(AP_PATH)arduino/wiring.c $(AP_PATH)arduino/wiring_shift.c
+SOURCES_ARDUINO_C=$(AP_PATH)arduino/wiring_digital.c $(AP_PATH)arduino/WInterrupts.c $(AP_PATH)arduino/wiring_pulse.c $(AP_PATH)arduino/wiring_analog.c $(AP_PATH)arduino/wiring.c $(AP_PATH)arduino/wiring_shift.c $(AP_PATH)arduino/libraries/Wire/utility/twi.c
 OBJECTS_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.o)
-SOURCES_ARDUINO_CPP=$(AP_PATH)arduino/Wire.cpp $(AP_PATH)arduino/CapacitiveSensor.cpp $(AP_PATH)arduino/CDC.cpp $(AP_PATH)arduino/Stream.cpp $(AP_PATH)arduino/HID.cpp $(AP_PATH)arduino/Tone.cpp $(AP_PATH)arduino/WMath.cpp $(AP_PATH)arduino/WString.cpp $(AP_PATH)arduino/new.cpp $(AP_PATH)arduino/main.cpp $(AP_PATH)arduino/HardwareSerial.cpp $(AP_PATH)arduino/IPAddress.cpp $(AP_PATH)arduino/Print.cpp $(AP_PATH)arduino/USBCore.cpp
+SOURCES_ARDUINO_CPP=$(AP_PATH)arduino/CDC.cpp $(AP_PATH)arduino/Stream.cpp $(AP_PATH)arduino/HID.cpp $(AP_PATH)arduino/Tone.cpp $(AP_PATH)arduino/WMath.cpp $(AP_PATH)arduino/WString.cpp $(AP_PATH)arduino/new.cpp $(AP_PATH)arduino/main.cpp $(AP_PATH)arduino/HardwareSerial.cpp $(AP_PATH)arduino/IPAddress.cpp $(AP_PATH)arduino/Print.cpp $(AP_PATH)arduino/USBCore.cpp $(AP_PATH)arduino/libraries/CapacitiveSensor/CapacitiveSensor.cpp $(AP_PATH)arduino/libraries/Wire/Wire.cpp
 OBJECTS_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.o)
 OBJECTS=$(OBJECTS_PROJECT) $(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 OBJECTS_CORE=$(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
@@ -46,7 +47,7 @@ $(ARFILE): $(OBJECTS)
 	$(AR) $(ARFILE) $(OBJECTS)
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 
 $(ELFCODE): 
 	$(CC) $(LDFLAGS) $(OBJECTS_PROJECT) $(ARFILE) -o $@
