@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
 if [ "$1" = "fuse" ]; then
-  make fuse
+  sudo make fuse
 elif [ "$1" = "upload" ]; then
   make all
   sudo make upload
+  make clean
+elif [ "$1" = "bootload" ]; then
+  make all
+  sudo make bootload
   make clean
 else
   sudo apt-get update

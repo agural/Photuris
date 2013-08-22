@@ -27,7 +27,10 @@ $ ./init.sh
 #### Download using a programmer
 1. `cd` to the `Photuris` directory.
 1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
-1. Connect the flashlight to the USBasp including the `reset` pin.
+1. Connect the flashlight to your computer:
+    1. Connect the USBasp to your computer.
+    1. Connect the USBasp to the ISP-μUSB adapter to the flashlight.
+    1. Connect the reset wire to the flashlight.
 1. Run:
 
 <pre>
@@ -36,17 +39,17 @@ $ sudo make upload
 $ make clean
 </pre>
 
-1. If you need to reflash the fuses, run `$ make fuse`.
+1. If you need to reflash the fuses, run `$ sudo make fuse`.
 
 #### Download using bootloader
 1. `cd` to the `Photuris` directory.
 1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
-1. Connect the flashlight to a micro USB and make sure the ID pin is floating (NOT tied to ground).
+1. Connect the flashlight to your computer through a μUSB cable. Make sure the ID pin is floating (NOT tied to ground).
 1. Run:
 
 <pre>
 $ make all
-$ make bootload
+$ sudo make bootload
 $ make clean
 </pre>
 
