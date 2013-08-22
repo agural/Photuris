@@ -6,35 +6,48 @@ details, or [Photuris E19 Product][2] to buy!
 ## Folder Overview
 
 * `arduino`: Contains arduino libraries.
-* `bin`: Contains compiled binary (`*.o`, `*.hex`, etc.).
 * `include`: Contains header interface files for lib files.
 * `lib`: Contains libraries for the Photuris flashlight.
 * `src`: Contains main `photuris.ino` code.
-* `tools`: Contains avrdude and avr files.
 
-## Linux Installation
+## Linux Installation (Ubuntu/Debian)
 
-#### Download using a programmer
-1. Download Photuris project.
-1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
-1. Modify the `Makefile` to match your programmer and port.
-1. Run while having the board's `reset` pin conected to the USBasp's `reset` pin:
+#### Installation
+1. Run the following commands:
 
 <pre>
-$ make all
-$ make fuse
-$ make upload
+$ git clone https://github.com/agural/Photuris.git
+$ cd Photuris
+$ ./init.sh
 </pre>
 
-#### Download using bootloader
-1. Download Photuris project.
+1. Modify the `Makefile` to match your programmer and port.
+1. If you want to use additional libraries, add them to `arduino/libraries` and add the library name to variable `LIB` in `Makefile`.
+
+#### Download using a programmer
+1. `cd` to the `Photuris` directory.
 1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
-1. Run with micro USB ID pin floating (NOT tied to ground):
+1. Connect the flashlight to the USBasp including the `reset` pin.
+1. Run:
 
 <pre>
 $ make all
-$ make fuse
+$ sudo make upload
+$ make clean
+</pre>
+
+1. If you need to reflash the fuses, run `$ make fuse`.
+
+#### Download using bootloader
+1. `cd` to the `Photuris` directory.
+1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
+1. Connect the flashlight to a micro USB and make sure the ID pin is floating (NOT tied to ground).
+1. Run:
+
+<pre>
+$ make all
 $ make bootload
+$ make clean
 </pre>
 
 ## Important Resources

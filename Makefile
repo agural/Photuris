@@ -14,24 +14,31 @@ BAUDRATE=115200                     # Programming Baud rate.
 LFUSE=0xD6                          # External full-swing crystal, no clock speed division
 HFUSE=0xD5                          # WDT not always on, EEPROM save on reprogram, BOD=2.7V
 EFUSE=0xF9                          # Bootloader 1024 words (app: 0x000-0xBFF, boot: 0xC00-0xFFF)
+LIB=CapacitiveSensor Wire
 
 CC=avr-gcc
 CCP=avr-g++
 AR=avr-ar rcs
 OBJ=avr-objcopy
 AVRDUDE=avrdude
-AVRDUDEFLAGS=-c $(PROGRAMMER) -p $(MCU) -P $(PORT) -C $(AP_PATH)tools/avrdude.conf -b $(BAUDRATE)
-EEPFLAGS=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
-HEXFLAGS=-O ihex -R .eeprom
+
 CFLAGS=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=$(CPU) -MMD -DUSB_VID=null -DUSB_PID=null -DARDUINO=101 -I$(AP_PATH)arduino -I$(AP_PATH)arduino/variants/standard
 LDFLAGS=-Os -Wl,--gc-sections -mmcu=$(MCU) -L$(AP_PATH)arduino -L$(AP_PATH) -L$(AP_PATH) -lm
-INCLUDE=-I$(AP_PATH)arduino/libraries/CapacitiveSensor -I$(AP_PATH)arduino/libraries/Wire/utility -I$(AP_PATH)arduino/libraries/Wire
+EEPFLAGS=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
+HEXFLAGS=-O ihex -R .eeprom
+AVRDUDEFLAGS=-c $(PROGRAMMER) -p $(MCU) -P $(PORT) -b $(BAUDRATE)
+
+LIBINCS=$(addprefix $(AP_PATH)arduino/libraries/,$(LIB))
+INCLUDE:=$(addprefix -I,$(shell find $(LIBINCS) -type d -not -path "*/examples*"))
 ARFILE=$(AP_PATH)arduino/core.a
 OBJECTS_PROJECT=$(SOURCES_PROJECT:.cpp=.o)
-SOURCES_ARDUINO_C=$(AP_PATH)arduino/wiring_digital.c $(AP_PATH)arduino/WInterrupts.c $(AP_PATH)arduino/wiring_pulse.c $(AP_PATH)arduino/wiring_analog.c $(AP_PATH)arduino/wiring.c $(AP_PATH)arduino/wiring_shift.c $(AP_PATH)arduino/libraries/Wire/utility/twi.c
+
+SOURCES_ARDUINO_C:=$(shell find $(AP_PATH)arduino -name '*.c' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.c')
 OBJECTS_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.o)
-SOURCES_ARDUINO_CPP=$(AP_PATH)arduino/CDC.cpp $(AP_PATH)arduino/Stream.cpp $(AP_PATH)arduino/HID.cpp $(AP_PATH)arduino/Tone.cpp $(AP_PATH)arduino/WMath.cpp $(AP_PATH)arduino/WString.cpp $(AP_PATH)arduino/new.cpp $(AP_PATH)arduino/main.cpp $(AP_PATH)arduino/HardwareSerial.cpp $(AP_PATH)arduino/IPAddress.cpp $(AP_PATH)arduino/Print.cpp $(AP_PATH)arduino/USBCore.cpp $(AP_PATH)arduino/libraries/CapacitiveSensor/CapacitiveSensor.cpp $(AP_PATH)arduino/libraries/Wire/Wire.cpp
+
+SOURCES_ARDUINO_CPP:=$(shell find $(AP_PATH)arduino -name '*.cpp' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.cpp')
 OBJECTS_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.o)
+
 OBJECTS=$(OBJECTS_PROJECT) $(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 OBJECTS_CORE=$(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
 ELFCODE=$(join $(PROJECT_NAME),.elf)

@@ -1,6 +1,5 @@
 TODO:
 * Update README.md.
-* Update Makefile (needs paths to all libraries or maybe globbing?).
 * Merge in the bootloading tools (both initial loading of the bootloading
   files and allowing bootloading later on).
 * Move library-like functions out of photuris.cpp (clean up the code!).
