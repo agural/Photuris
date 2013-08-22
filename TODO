@@ -1,9 +1,0 @@
-Here are the items that still need to be worked out:
-
-* Updating README.md.
-* Updating Makefile (needs correct port, FUSES, etc).
-* Pulling out all auxiliary library functions to /lib.
-* Merging in the bootloading tools (both initial loading of the bootloading
-  files and allowing bootloading later on).
-* Completing the /src/photuris.ino file.
-

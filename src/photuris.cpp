@@ -5,7 +5,7 @@
  * To Arduino: 12/25/2011 01:00:00 PM
  * AGMF03v0.1: 03/05/2013 06:00:00 AM
  * Author: Albert Gural
- */ 
+ */
 
 #include "Arduino.h"
 
@@ -23,12 +23,12 @@
 #define	F_CPU 12000000UL
 #define	sbi(port, pbit)	(port) |= (1 << (pbit))
 #define	cbi(port, pbit)	(port) &= ~(1 << (pbit))
-#define gbi(port, pbit) ((port >> pbit) & 1) 
+#define gbi(port, pbit) ((port >> pbit) & 1)
 
-/*FUSES = { 
-    .low =	0xD6, 
-    .high =	0xD5, 
-    .extended = 0xF9, 
+/*FUSES = {
+    .low =	0xD6,
+    .high =	0xD5,
+    .extended = 0xF9,
 };*/
 
 
@@ -111,7 +111,7 @@ double main_switch(int samples) {
         pinMode(slide_MB, OUTPUT);
         total += csM0.capacitiveSensor(10);
         delay_us(5);
-        
+
         // Outer Switch
         pinMode(slide_MB, INPUT);
         pinMode(slide_MA, OUTPUT);
@@ -130,7 +130,7 @@ int button09(int samples, int threshold) {
         pinMode(slide_S9, OUTPUT);
         total1 += csS0.capacitiveSensor(10);
         delay_us(5);
-        
+
         // Slide 9
         pinMode(slide_S9, INPUT);
         pinMode(slide_S0, OUTPUT);
@@ -199,7 +199,7 @@ void on( byte wipe0,  byte wipe1) {
     Wire.write(POT_TCONrs1);
     Wire.write(POT_TCONrs2);
     Wire.endTransmission();
-    delay(1);    
+    delay(1);
     pinMode(A3, OUTPUT);
     digitalWrite(A3, 1);
 }
@@ -267,7 +267,7 @@ void display_led(unsigned long led, int time, int p) {
     if(p < 0) p = 0;
     if(p > 100) p = 100;
     p /= 2; // Allow input in terms of percentage 0 - 100, convert to 0 - 50us
-    
+
     for(int i = 0; i < time; i++) {
         wdt_reset();
         if(gbi(led,0)) {
@@ -279,7 +279,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,1)) {
             sbi(DDRD,  5);
             sbi(DDRD,  3);
@@ -289,7 +289,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,2)) {
             sbi(DDRD,  5);
             sbi(DDRB,  2);
@@ -299,7 +299,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,3)) {
             sbi(DDRD,  5);
             sbi(DDRB,  1);
@@ -309,7 +309,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,4)) {
             sbi(DDRD,  5);
             sbi(DDRD,  6);
@@ -319,7 +319,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,5)) {
             sbi(DDRD,  6);
             sbi(DDRD,  5);
@@ -329,7 +329,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,6)) {
             sbi(DDRD,  6);
             sbi(DDRB,  1);
@@ -339,7 +339,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,7)) {
             sbi(DDRD,  6);
             sbi(DDRB,  2);
@@ -349,7 +349,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,8)) {
             sbi(DDRD,  6);
             sbi(DDRD,  3);
@@ -359,7 +359,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,9)) {
             sbi(DDRD,  3);
             sbi(DDRD,  6);
@@ -369,7 +369,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,10)) {
             sbi(DDRB,  2);
             sbi(DDRB,  1);
@@ -379,7 +379,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,11)) {
             sbi(DDRB,  1);
             sbi(DDRB,  2);
@@ -389,7 +389,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,12)) {
             sbi(DDRB,  1);
             sbi(DDRD,  3);
@@ -399,7 +399,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,13)) {
             sbi(DDRB,  1);
             sbi(DDRD,  5);
@@ -409,7 +409,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,14)) {
             sbi(DDRB,  1);
             sbi(DDRD,  6);
@@ -419,7 +419,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,15)) {
             sbi(DDRD,  3);
             sbi(DDRB,  2);
@@ -429,7 +429,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,16)) {
             sbi(DDRD,  3);
             sbi(DDRB,  1);
@@ -439,7 +439,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p);
         }
         else led_off(50);
-        
+
         if(gbi(led,17)) {
             sbi(DDRB,  2);
             sbi(DDRD,  3);
@@ -449,7 +449,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p/2);
         }
         else led_off(50);
-        
+
         if(gbi(led,18)) {
             sbi(DDRB,  2);
             sbi(DDRD,  5);
@@ -459,7 +459,7 @@ void display_led(unsigned long led, int time, int p) {
             led_off(50-p/4);
         }
         else led_off(50);
-        
+
         if(gbi(led,19)) {
             sbi(DDRB,  2);
             sbi(DDRD,  6);
@@ -471,54 +471,54 @@ void display_led(unsigned long led, int time, int p) {
         else led_off(50);
     }
 }
-    
-void setup() {                
+
+void setup() {
     cli();
-  	
+
     //WDT
     wdt_enable(WDTO_8S);
     wdt_reset();
-  
+
     DDRB  = 0b00000000;
     DDRC  = 0b00000000;
     DDRD  = 0b00000000;
     PORTB = 0b00000000;
     PORTC = 0b01110000;
     PORTD = 0b00000000;
-    
+
     setup_POT();
-    
-    /* Test: PWM 
+
+    /* Test: PWM
     setup_pwm1();
     pwm1_on();
     OCR1A = 0x0100;
     _delay_ms(500);
     pwm1_off();*/
-    
+
     //TCCR2A = 0b00000000;
     //TCCR2B = 0b00000111;
     //TIMSK2 = 0b00000000;
-  	
+
     // Pin-Change Interrupts
     //sbi(PCICR, 0);
     //sbi(PCMSK0, 0);
     //sbi(PCICR, 1);
     //sbi(PCMSK1, 3);
-  	
+
     // Power Saving
     //power_spi_disable();
     //power_timer0_disable();
     //power_twi_disable();
     //power_usart0_disable();
-    
+
     randomSeed(analogRead(A3));
-    
+
     sei();
 }
 
 void loop() {
-    wdt_reset();   
-    
+    wdt_reset();
+
     //int cur_val;
     //int ctr = 0;
     /*while(true) {
@@ -528,7 +528,7 @@ void loop() {
         display_led((int)main_switch_0(20) + (1 << 10), 10, 10);
         //ctr++;
     }*/
-    
+
     /*while(true) {
         wdt_reset();
         for(byte i = 0x20; i <= 0x2F; i += 1) {
@@ -544,7 +544,7 @@ void loop() {
             display_led(i << 1, 1000, 10);
         }
     }*/
-    
+
     while(true) {
         wdt_reset();
         for(byte brightness = 0; brightness < 201; brightness++) {
@@ -583,7 +583,7 @@ void loop() {
         wdt_reset();
         display_led(1 << batteryLevel(), 50, 10);
     }
-    
+
     int leds = 0;
     int rbit = 0;
     while(true) {
@@ -592,7 +592,7 @@ void loop() {
         gbi(leds, rbit) ? cbi(leds, rbit) : sbi(leds, rbit);
         display_led(leds, 100, 10);
     }*/
-    
+
     int j = 0;
     unsigned long i = 1;
     while(true) {
@@ -602,27 +602,26 @@ void loop() {
         j++;
     }
 
-    
     //pwm1_on();
-    
+
     /* Test: ADC
     int adcIN = analogRead(A0);
     OCR1B = fmax(0, fmin(65535, (square((adcIN + 1) / 32.0) + pow(2.0, (adcIN + 1) / 64.0) - 1 - M_SQRT2)));
     PORTD = OCR1B >> 8;
     */
-    
-    
+
+
     //OCR1A = 0x0100;
     /*
     int ctrled = 0;
-    
+
     while(1) {
         wdt_reset();
         ctrled += 1;
         sbi(PORTB, wxml_u2); // Woops... this maps to burst mode ><
         if(ctrled % 100 < 10) sbi(PORTC, xml_pwr);
         else cbi(PORTC, xml_pwr);
-        
+
         //OCR1A = 0x0100;
         //OCR1B = 0x1000;
         // Test: CapSense
@@ -630,7 +629,7 @@ void loop() {
         //PORTD = sVal;
         if(sVal >= 16) OCR1B = 0xFFFF;
         else if(sVal != -1) OCR1B = (uint16_t)pow(2,sVal);
-        
+
         if(ctrled % 100 < 80) {
             if(sVal == -1) {
                 // OCR1B = 0x0000;
@@ -647,7 +646,7 @@ void loop() {
             sbi(PORTD, rgbl_gl);
             cbi(PORTD, rgbl_bl);
         }
-        
+
         if(ctrled % 100 < 20) {
             sbi(PORTC, irl_pos);
             cbi(PORTC, irl_neg);
@@ -660,7 +659,7 @@ void loop() {
         else if(ctrled % 100 < 80) {
             cbi(PORTC, uvl_pos);
         }
-            
+
     }
     */
 }

@@ -16,3 +16,6 @@
 # Ignore .a files, because the core library of Arduino compiles to core.a
 *.a
 
+# Ignore VIM autosave files
+*.swp
+

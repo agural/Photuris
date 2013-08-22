@@ -1,0 +1,14 @@
+TODO:
+* Update README.md.
+* Update Makefile (needs paths to all libraries or maybe globbing?).
+* Merge in the bootloading tools (both initial loading of the bootloading
+  files and allowing bootloading later on).
+* Move library-like functions out of photuris.cpp (clean up the code!).
+* Complete the /src/photuris.ino file.
+* Complete documentation and commenting.
+* Merge in all Photuris-related files (schematic, board, case CAD, pictures, etc)?
+
+Timeline:
+* 2013/08/21 @ 23:30 | First successful compile of photuris.cpp under ArduinoPure
+* 2013/08/22 @ 02:00 | First successful download of code to AGMF03 board
+
