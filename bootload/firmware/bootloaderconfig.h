@@ -39,15 +39,15 @@ these macros are defined, the boot loader usees them.
 
 /* ---------------------------- Hardware Config ---------------------------- */
 
-#define USB_CFG_IOPORTNAME      D
+#define USB_CFG_IOPORTNAME      B
 /* This is the port where the USB bus is connected. When you configure it to
  * "B", the registers PORTB, PINB and DDRB will be used.
  */
-#define USB_CFG_DMINUS_BIT      0
+#define USB_CFG_DMINUS_BIT      3
 /* This is the bit number in USB_CFG_IOPORT where the USB D- line is connected.
  * This may be any bit in the port.
  */
-#define USB_CFG_DPLUS_BIT       2
+#define USB_CFG_DPLUS_BIT       4
 /* This is the bit number in USB_CFG_IOPORT where the USB D+ line is connected.
  * This may be any bit in the port. Please note that D+ must also be connected
  * to interrupt pin INT0! [You can also use other interrupts, see section
@@ -108,11 +108,11 @@ these macros are defined, the boot loader usees them.
 
 static inline void  bootLoaderInit(void)
 {
-    PORTD = 1 << 3; /* activate pull-up for key */
+    PORTB = 1 << 5; /* activate pull-up for key */
     _delay_us(10);  /* wait for levels to stabilize */
 }
 
-#define bootLoaderCondition()   ((PIND & (1 << 3)) == 0)   /* True if jumper is set */
+#define bootLoaderCondition()   ((PINB & (1 << 5)) != 0)   /* True if jumper is set */
 
 #endif
 

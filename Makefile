@@ -12,7 +12,7 @@ PORT=usb                            # USB Port for USBasp programer.
 AP_PATH=./
 BAUDRATE=115200                     # Programming Baud rate.
 LFUSE=0xD6                          # External full-swing crystal, no clock speed division
-HFUSE=0xD5                          # WDT not always on, EEPROM save on reprogram, BOD=2.7V
+HFUSE=0xDD                          # WDT not always on, EEPROM no save on reprogram, BOD=2.7V
 EFUSE=0xF9                          # Bootloader 1024 words (app: 0x000-0xBFF, boot: 0xC00-0xFFF)
 LIB=CapacitiveSensor Wire
 
