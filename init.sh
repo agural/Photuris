@@ -15,5 +15,6 @@ else
   sudo apt-get upgrade
   sudo apt-get install gcc-avr avr-libc
   sudo apt-get install avrdude
+  sudo apt-get install libusb-dev
 fi
 

@@ -56,7 +56,7 @@ $(ARFILE): $(OBJECTS)
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 
-$(ELFCODE): 
+$(ELFCODE):
 	$(CC) $(LDFLAGS) $(OBJECTS_PROJECT) $(ARFILE) -o $@
 
 $(EEPCODE):
