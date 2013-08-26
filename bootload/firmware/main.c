@@ -24,24 +24,23 @@ static void leaveBootloader() __attribute__((__noreturn__));
 /* ------------------------------------------------------------------------ */
 
 #ifndef ulong
-#   define ulong    unsigned long
+#   define ulong unsigned long
 #endif
 #ifndef uint
-#   define uint     unsigned int
+#   define uint unsigned int
 #endif
 
 #if (FLASHEND) > 0xffff /* we need long addressing */
-#   define addr_t           ulong
+#   define addr_t ulong
 #else
-#   define addr_t           uint
+#   define addr_t uint
 #endif
 
-static addr_t           currentAddress; /* in bytes */
-static uchar            offset;         /* data already processed in current transfer */
+static addr_t currentAddress; /* in bytes */
+static uchar offset;          /* data already processed in current transfer */
 #if BOOTLOADER_CAN_EXIT
-static uchar            exitMainloop;
+static uchar exitMainloop;
 #endif
-
 
 const PROGMEM char usbHidReportDescriptor[33] = {
     0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
@@ -65,10 +64,10 @@ const PROGMEM char usbHidReportDescriptor[33] = {
 
 /* allow compatibility with avrusbboot's bootloaderconfig.h: */
 #ifdef BOOTLOADER_INIT
-#   define bootLoaderInit()         BOOTLOADER_INIT
+#   define bootLoaderInit() BOOTLOADER_INIT
 #endif
 #ifdef BOOTLOADER_CONDITION
-#   define bootLoaderCondition()    BOOTLOADER_CONDITION
+#   define bootLoaderCondition() BOOTLOADER_CONDITION
 #endif
 
 /* compatibility with ATMega88 and other new devices: */
@@ -81,9 +80,9 @@ const PROGMEM char usbHidReportDescriptor[33] = {
 
 static void (*nullVector)(void) __attribute__((__noreturn__));
 
-static void leaveBootloader()
-{
+static void leaveBootloader() {
     DBG1(0x01, 0, 0);
+    bootLoaderExit();
     cli();
     boot_rww_enable();
     USB_INTR_ENABLE = 0;
@@ -101,10 +100,9 @@ static void leaveBootloader()
     nullVector();
 }
 
-uchar   usbFunctionSetup(uchar data[8])
-{
-usbRequest_t    *rq = (void *)data;
-static uchar    replyBuffer[7] = {
+uchar usbFunctionSetup(uchar data[8]) {
+    usbRequest_t *rq = (void *)data;
+    static uchar replyBuffer[7] = {
         1,                              /* report ID */
         SPM_PAGESIZE & 0xff,
         SPM_PAGESIZE >> 8,
@@ -114,34 +112,33 @@ static uchar    replyBuffer[7] = {
         (((long)FLASHEND + 1) >> 24) & 0xff
     };
 
-    if(rq->bRequest == USBRQ_HID_SET_REPORT){
-        if(rq->wValue.bytes[0] == 2){
+    if(rq->bRequest == USBRQ_HID_SET_REPORT) {
+        if(rq->wValue.bytes[0] == 2) {
             offset = 0;
             return USB_NO_MSG;
         }
 #if BOOTLOADER_CAN_EXIT
-        else{
+        else {
             exitMainloop = 1;
         }
 #endif
-    }else if(rq->bRequest == USBRQ_HID_GET_REPORT){
+    } else if(rq->bRequest == USBRQ_HID_GET_REPORT) {
         usbMsgPtr = (usbMsgPtr_t)replyBuffer;
         return 7;
     }
     return 0;
 }
 
-uchar usbFunctionWrite(uchar *data, uchar len)
-{
-union {
-    addr_t  l;
-    uint    s[sizeof(addr_t)/2];
-    uchar   c[sizeof(addr_t)];
-}       address;
-uchar   isLast;
+uchar usbFunctionWrite(uchar *data, uchar len) {
+    union {
+        addr_t  l;
+        uint    s[sizeof(addr_t)/2];
+        uchar   c[sizeof(addr_t)];
+    } address;
+    uchar   isLast;
 
     address.l = currentAddress;
-    if(offset == 0){
+    if(offset == 0) {
         DBG1(0x30, data, 3);
         address.c[0] = data[1];
         address.c[1] = data[2];
@@ -155,7 +152,7 @@ uchar   isLast;
     DBG1(0x31, (void *)&currentAddress, 4);
     offset += len;
     isLast = offset & 0x80; /* != 0 if last block received */
-    do{
+    do {
         addr_t prevAddr;
 #if SPM_PAGESIZE > 256
         uint pageAddr;
@@ -164,7 +161,7 @@ uchar   isLast;
 #endif
         DBG1(0x32, 0, 0);
         pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
-        if(pageAddr == 0){              /* if page start: erase */
+        if(pageAddr == 0) {              /* if page start: erase */
             DBG1(0x33, 0, 0);
 #ifndef TEST_MODE
             cli();
@@ -181,7 +178,7 @@ uchar   isLast;
         data += 2;
         /* write page when we cross page boundary */
         pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
-        if(pageAddr == 0){
+        if(pageAddr == 0) {
             DBG1(0x34, 0, 0);
 #ifndef TEST_MODE
             cli();
@@ -191,15 +188,14 @@ uchar   isLast;
 #endif
         }
         len -= 2;
-    }while(len);
+    } while(len);
     currentAddress = address.l;
     DBG1(0x35, (void *)&currentAddress, 4);
     return isLast;
 }
 
-static void initForUsbConnectivity(void)
-{
-uchar   i = 0;
+static void initForUsbConnectivity(void) {
+    uchar   i = 0;
 
 #if F_CPU == 12800000
     TCCR0 = 3;          /* 1/64 prescaler */
@@ -207,43 +203,42 @@ uchar   i = 0;
     usbInit();
     /* enforce USB re-enumerate: */
     usbDeviceDisconnect();  /* do this while interrupts are disabled */
-    do{             /* fake USB disconnect for > 250 ms */
+    do {             /* fake USB disconnect for > 250 ms */
         wdt_reset();
         _delay_ms(1);
-    }while(--i);
+    } while(--i);
     usbDeviceConnect();
     sei();
 }
 
-int __attribute__((noreturn)) main(void)
-{
+int __attribute__((noreturn)) main(void) {
     /* initialize hardware */
     bootLoaderInit();
     odDebugInit();
     DBG1(0x00, 0, 0);
     /* jump to application if jumper is set */
-    if(bootLoaderCondition()){
+    if(bootLoaderCondition()) {
         uchar i = 0, j = 0;
 #ifndef TEST_MODE
         GICR = (1 << IVCE);  /* enable change of interrupt vectors */
         GICR = (1 << IVSEL); /* move interrupts to boot flash section */
 #endif
         initForUsbConnectivity();
-        do{ /* main event loop */
+        do { /* main event loop */
             wdt_reset();
             usbPoll();
 #if BOOTLOADER_CAN_EXIT
-            if(exitMainloop){
+            if(exitMainloop) {
 #if F_CPU == 12800000
                 break;  /* memory is tight at 12.8 MHz, save exit delay below */
 #endif
-                if(--i == 0){
+                if(--i == 0) {
                     if(--j == 0)
                         break;
                 }
             }
 #endif
-        }while(bootLoaderCondition());
+        } while(bootLoaderCondition());
     }
     leaveBootloader();
 }

@@ -1,10 +1,14 @@
 /*
- * AGMF03.c
+ * photuris.cpp
  *
- * AVR Studio: 08/26/2011 10:00:00 PM
- * To Arduino: 12/25/2011 01:00:00 PM
- * AGMF03v0.1: 03/05/2013 06:00:00 AM
+ * AVR Studio: 2011/08/26 10:00:00 PM
+ * To Arduino: 2011/12/25 01:00:00 PM
+ * AGMF03v0.1: 2013/03/05 06:00:00 AM
+ * Photuris v0.3: 2013/08/07 09:30:00 AM
+ *
  * Author: Albert Gural
+ * e: ag@albertgural.com
+ * w: http://albertgural.com
  */
 
 #include "Arduino.h"
@@ -27,7 +31,7 @@
 
 /*FUSES = {
     .low =	0xD6,
-    .high =	0xD5,
+    .high =	0xDD,
     .extended = 0xF9,
 };*/
 
@@ -80,6 +84,8 @@ void delay_ms(uint16_t count) {
         _delay_ms(1);
     }
 }
+
+void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
 
 /********** CAPACITIVE TOUCH SENSORS **********/
 
@@ -482,7 +488,7 @@ void setup() {
     DDRB  = 0b00000000;
     DDRC  = 0b00000000;
     DDRD  = 0b00000000;
-    PORTB = 0b00000000;
+    PORTB = 0b00100000;
     PORTC = 0b01110000;
     PORTD = 0b00000000;
 
@@ -518,6 +524,9 @@ void setup() {
 
 void loop() {
     wdt_reset();
+    if(analogRead(A3) < 3 && gbi(PINB, 5)) {
+        jump_to_bootloader();
+    }
 
     //int cur_val;
     //int ctr = 0;

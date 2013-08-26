@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [ "$1" = "fuse" ]; then
+    sudo make fuse
+elif [ "$1" = "upload" ]; then
+    make all
+    sudo make upload
+    make clean
+elif [ "$1" = "bootflash" ]; then
+    cd bootload/firmware
+    make all
+    sudo make flash
+    make clean
+    cd ../..
+elif [ "$1" = "bootload" ]; then
+    make all
+    cd bootload/commandline
+    make all
+    sudo ./bootloadHID -r ../../photuris.hex
+    make clean
+    cd ../..
+    make clean
+else
+    sudo apt-get update
+    sudo apt-get upgrade
+    sudo apt-get install gcc-avr avr-libc
+    sudo apt-get install avrdude
+    sudo apt-get install libusb-dev
+fi
+

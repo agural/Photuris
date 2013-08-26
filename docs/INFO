@@ -9,4 +9,5 @@ Timeline:
 * 2013/08/21 @ 23:30 | First successful compile of photuris.cpp under ArduinoPure.
 * 2013/08/22 @ 02:00 | First successful download of code to AGMF03 board.
 * 2013/08/25 @ 01:30 | First successful install of bootloader to AGMF03 board.
+* 2013/08/25 @ 01:55 | First successful install of photuris.cpp through bootloader to AGMF03 board.
 

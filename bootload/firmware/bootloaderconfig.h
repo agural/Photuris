@@ -106,10 +106,25 @@ these macros are defined, the boot loader usees them.
 #ifndef __ASSEMBLER__   /* assembler cannot parse function definitions */
 #include <util/delay.h>
 
-static inline void  bootLoaderInit(void)
-{
-    PORTB = 1 << 5; /* activate pull-up for key */
+static inline void  bootLoaderInit(void) {
+    // Turn on green LED and bootloader switch pullup
+    DDRB = 0b00000100;
+    DDRC = 0b00000000;
+    DDRD = 0b00100000;
+    PORTB = 0b00100100;
+    PORTC = 0b01110000;
+    PORTD = 0b00000000;
     _delay_us(10);  /* wait for levels to stabilize */
+}
+
+static inline void bootLoaderExit(void) {
+    DDRB = 0b00000000;
+    DDRC = 0b00000000;
+    DDRD = 0b00000000;
+    PORTB = 0b00100000;
+    PORTC = 0b01110000;
+    PORTD = 0b00000000;
+    _delay_us(10);
 }
 
 #define bootLoaderCondition()   ((PINB & (1 << 5)) != 0)   /* True if jumper is set */
