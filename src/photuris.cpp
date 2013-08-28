@@ -494,12 +494,12 @@ void setup() {
 
     setup_POT();
 
-    /* Test: PWM
-    setup_pwm1();
-    pwm1_on();
-    OCR1A = 0x0100;
-    _delay_ms(500);
-    pwm1_off();*/
+    //Test: PWM
+    //setup_pwm1();
+    //pwm1_on();
+    //OCR1A = 0x0100;
+    //_delay_ms(500);
+    //pwm1_off();
 
     //TCCR2A = 0b00000000;
     //TCCR2B = 0b00000111;
@@ -526,7 +526,7 @@ void loop() {
     wdt_reset();
     if(analogRead(A3) < 50 && gbi(PINB, 5)) {
         display_led(5, 500, 10);
-        cli();
+        //cli();
         jump_to_bootloader();
     }
 
