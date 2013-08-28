@@ -524,7 +524,9 @@ void setup() {
 
 void loop() {
     wdt_reset();
-    if(analogRead(A3) < 3 && gbi(PINB, 5)) {
+    if(analogRead(A3) < 50 && gbi(PINB, 5)) {
+        display_led(5, 500, 10);
+        cli();
         jump_to_bootloader();
     }
 
