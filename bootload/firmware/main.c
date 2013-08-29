@@ -196,47 +196,18 @@ uchar usbFunctionWrite(uchar *data, uchar len) {
 
 static void initForUsbConnectivity(void) {
     uchar i = 0;
-    uchar j = 0;
-    uchar k = 0;
 
 #if F_CPU == 12800000
     TCCR0 = 3;          /* 1/64 prescaler */
 #endif
     usbInit();
-    DDRD |= 1 << 6;
     /* enforce USB re-enumerate: */
     usbDeviceDisconnect();  /* do this while interrupts are disabled */
-    DDRD |= 1 << 3;
-    /*sei();
-    _delay_ms(255);
-    cli();*/
-    /*for(; i < 255; i++) {
-        for(; j < 255; j++) {
-            for(; k < 250; k++) {
-                wdt_reset();
-                k += 1;
-                k -= 1;
-            }
-        }
-    }*/
-    for(i = 0; i < 255; i++) {
-        for(j = 0; j < 100; j++) {
-            wdt_reset();
-            _delay_us(10);
-        }
-    }
-    /*for(; i < 255; i++) {
-        for(; j < 255; j++) {
-        wdt_reset();
-        }
-    }*/
-    //do {             /* fake USB disconnect for > 250 ms */
-    //    wdt_reset();
-    //    _delay_ms(1);
-    //} while(--i);
-    DDRD &= ~(1 << 3);
+    do {
+      wdt_reset();
+      _delay_ms(1);
+    } while(--i);
     usbDeviceConnect();
-    DDRD &= ~(1 << 6);
     sei();
 }
 
@@ -256,7 +227,6 @@ int __attribute__((noreturn)) main(void) {
         do { /* main event loop */
             wdt_reset();
             usbPoll();
-            DDRB ^= 1 << 1;
 #if BOOTLOADER_CAN_EXIT
             if(exitMainloop) {
 #if F_CPU == 12800000

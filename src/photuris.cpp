@@ -23,8 +23,8 @@
 #include <CapacitiveSensor.h>
 #include <Wire.h>
 
-#undef  F_CPU
-#define	F_CPU 12000000UL
+//#undef  F_CPU
+//#define	F_CPU 12000000UL
 #define	sbi(port, pbit)	(port) |= (1 << (pbit))
 #define	cbi(port, pbit)	(port) &= ~(1 << (pbit))
 #define gbi(port, pbit) ((port >> pbit) & 1)
@@ -86,6 +86,21 @@ void delay_ms(uint16_t count) {
 }
 
 void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
+
+void startBootloader(void) {
+  cbi(TIMSK0, TOIE0);
+  cli();
+  wdt_disable();
+
+  cbi(ADCSRA, ADIE);
+  cbi(ADCSRA, ADEN);
+
+  PORTB = 0;
+  PORTC = 0;
+  PORTD = 0;
+
+  jump_to_bootloader();
+}
 
 /********** CAPACITIVE TOUCH SENSORS **********/
 
@@ -525,9 +540,8 @@ void setup() {
 void loop() {
     wdt_reset();
     if(analogRead(A3) < 50 && gbi(PINB, 5)) {
-        display_led(5, 500, 10);
-        //cli();
-        jump_to_bootloader();
+        display_led(513, 500, 10);
+        startBootloader();
     }
 
     //int cur_val;
