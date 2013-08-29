@@ -6,6 +6,8 @@ details, or [Photuris E19 Product][2] to buy!
 ## Folder Overview
 
 * `arduino`: Contains arduino libraries.
+* `bootload`: Contains files for the bootloader and for uploading firmware via bootload.
+* `docs`: Contains documentation and history.
 * `include`: Contains header interface files for lib files.
 * `lib`: Contains libraries for the Photuris flashlight.
 * `src`: Contains main `photuris.ino` code.
@@ -18,15 +20,16 @@ details, or [Photuris E19 Product][2] to buy!
 <pre>
 $ git clone https://github.com/agural/Photuris.git
 $ cd Photuris
-$ ./init.sh
+$ ./run.sh
 </pre>
 
 1. Modify the `Makefile` to match your programmer and port.
 1. If you want to use additional libraries, add them to `arduino/libraries` and add the library name to variable `LIB` in `Makefile`.
+1. If you need to reflash the fuses, run `$ sudo make fuse` or `$ ./run fuse`.
 
-#### Download using a programmer
+#### Install firmware using a programmer
 1. `cd` to the `Photuris` directory.
-1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
+1. Modify `src/photuris.cpp` to whatever you want the flashlight to do.
 1. Connect the flashlight to your computer:
     1. Connect the USBasp to your computer.
     1. Connect the USBasp to the ISP-μUSB adapter to the flashlight.
@@ -39,19 +42,38 @@ $ sudo make upload
 $ make clean
 </pre>
 
-1. If you need to reflash the fuses, run `$ sudo make fuse`.
+1. Shortcut: `$ ./run upload`
+
+#### Install bootloader using a programmer
+1. `cd` to the `bootload/firmware` directory.
+1. Modify the `Makefile` to match your programmer and port.
+1. Run:
+
+<pre>
+$ make all
+$ sudo make flash
+$ make clean
+</pre>
+
+1. Shortcut: `$ ./run bootflash`
 
 #### Download using bootloader
+1. First make sure the bootloader is installed (see above).
 1. `cd` to the `Photuris` directory.
-1. Modify `src/photuris.ino` to whatever you want the flashlight to do.
+1. Modify `src/photuris.cpp` to whatever you want the flashlight to do.
 1. Connect the flashlight to your computer through a μUSB cable. Make sure the ID pin is floating (NOT tied to ground).
 1. Run:
 
 <pre>
 $ make all
-$ sudo make bootload
+$ sudo ./bootload/commandline/bootloadHID -r photuris.hex
 $ make clean
 </pre>
+
+1. Shortcut: `$ ./run bootload`
+
+## License
+Copywrite 2013 Albert Gural. Licensed under the MIT license.
 
 ## Important Resources
 
