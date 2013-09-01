@@ -88,18 +88,18 @@ void delay_ms(uint16_t count) {
 void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
 
 void startBootloader(void) {
-  cbi(TIMSK0, TOIE0);
-  cli();
-  wdt_disable();
+    cbi(TIMSK0, TOIE0);
+    cli();
+    wdt_disable();
 
-  cbi(ADCSRA, ADIE);
-  cbi(ADCSRA, ADEN);
+    cbi(ADCSRA, ADIE);
+    cbi(ADCSRA, ADEN);
 
-  PORTB = 0;
-  PORTC = 0;
-  PORTD = 0;
+    PORTB = 0;
+    PORTC = 0;
+    PORTD = 0;
 
-  jump_to_bootloader();
+    jump_to_bootloader();
 }
 
 /********** CAPACITIVE TOUCH SENSORS **********/
