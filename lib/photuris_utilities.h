@@ -8,6 +8,10 @@
  * Date:   2013/08/31 - 2013/08/31
  **********************************************************/
 
+// Ensure this library description is only included once.
+#ifndef photuris_utilities_h
+#define photuris_utilities_h
+
 #define REFERENCE_VOLTAGE 3.62
 
 /*** Battery Utilities ***/
@@ -28,3 +32,4 @@ bool isCharging;
 
 float getTemperature();
 
+#endif // photuris_utilities_h

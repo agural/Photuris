@@ -8,8 +8,7 @@ details, or [Photuris E19 Product][2] to buy!
 * `arduino`: Contains arduino libraries.
 * `bootload`: Contains files for the bootloader and for uploading firmware via bootload.
 * `docs`: Contains documentation and history.
-* `include`: Contains header interface files for lib files.
-* `lib`: Contains libraries for the Photuris flashlight.
+* `lib`: Contains libraries and headers for the Photuris flashlight.
 * `src`: Contains main `photuris.ino` code.
 
 ## Linux Installation (Ubuntu/Debian)
