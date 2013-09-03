@@ -38,7 +38,6 @@
 
 /********** PIN DEFINITIONS, for reference **********/
 
-/*
 // PORTB
 #define slide_0 0
 #define ctlLEDE 1
@@ -57,7 +56,7 @@
 #define pot_scl 5
 #define reset_p 6
 // PORTD
-#define build_p 0
+#define ir_recv 0
 #define slide_1 1
 #define slide_3 2
 #define ctlLEDB 3
@@ -65,7 +64,6 @@
 #define ctlLEDC 5
 #define ctlLEDD 6
 #define slide_8 7
-*/
 
 
 /********** GLOBAL VARIABLES **********/
