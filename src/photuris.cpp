@@ -23,82 +23,13 @@
 #include <CapacitiveSensor.h>
 #include <Wire.h>
 
-//#undef  F_CPU
-//#define	F_CPU 12000000UL
-#define	sbi(port, pbit)	(port) |= (1 << (pbit))
-#define	cbi(port, pbit)	(port) &= ~(1 << (pbit))
-#define gbi(port, pbit) ((port >> pbit) & 1)
-
-/*FUSES = {
-    .low =	0xD6,
-    .high =	0xDD,
-    .extended = 0xF9,
-};*/
+#include "photuris.h"
+//#include <photuris_utilities.h>
 
 
-/********** PIN DEFINITIONS, for reference **********/
-
-// PORTB
-#define slide_0 0
-#define ctlLEDE 1
-#define ctlLEDA 2
-#define usbmosi 3
-#define usbmiso 4
-#define usb_sck 5
-#define xtal_s1 6
-#define xtal_s2 7
-// PORTC
-#define slide_9 0
-#define mainswO 1
-#define mainswI 2
-#define xml_pwr 3
-#define pot_sda 4
-#define pot_scl 5
-#define reset_p 6
-// PORTD
-#define ir_recv 0
-#define slide_1 1
-#define slide_3 2
-#define ctlLEDB 3
-#define slide_6 4
-#define ctlLEDC 5
-#define ctlLEDD 6
-#define slide_8 7
-
-
-/********** GLOBAL VARIABLES **********/
-
+// Global Variables
 long displayLED = 0;
 int  mode = 0;
-
-void delay_us(uint16_t count) {
-    while(count--) {
-        _delay_us(1);
-    }
-}
-
-void delay_ms(uint16_t count) {
-    while(count--) {
-        _delay_ms(1);
-    }
-}
-
-void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
-
-void startBootloader(void) {
-    cbi(TIMSK0, TOIE0);
-    cli();
-    wdt_disable();
-
-    cbi(ADCSRA, ADIE);
-    cbi(ADCSRA, ADEN);
-
-    PORTB = 0;
-    PORTC = 0;
-    PORTD = 0;
-
-    jump_to_bootloader();
-}
 
 /********** CAPACITIVE TOUCH SENSORS **********/
 
