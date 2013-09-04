@@ -168,27 +168,6 @@ void off() {
     pinMode(A3, INPUT);
 }
 
-
-/********** BATTERY AND TEMPERATURE SENSING **********/
-
-// Outputs battery voltage from 2.7V to 4.2V in 0.15V increments.
-// Critically low battery is 0, while low battery is a 1 or 2.  A 6 or higher is healthy.
-int batteryLevel() {
-    pinMode(A3, INPUT);
-    double voltage = (double)analogRead(A3) / 66.15;  // 66.15 = 1024 [Full ADC Range] * 10/43 [Resistor Divider] * 1/3.6 [Chip Voltage]
-    delay(1);
-    pinMode(A3, OUTPUT);
-    return (int)(6.67 * voltage - 18);
-}
-
-// Outputs heatsink temperature from 0*C - 100*C in 10*C increments.
-// Critically high temperature is 7 or higher, while high temperature is 5 or 6.  A 3 or lower is healthy.
-int temperatureLevel() {
-    // TODO
-    return 0;
-}
-
-
 /********** CONTROL BOARD LED DISPLAY **********/
 
 void led_off(int time) {
