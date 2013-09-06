@@ -11,8 +11,6 @@
  * w: http://albertgural.com
  */
 
-#include "Arduino.h"
-
 #include <math.h>
 #include <avr/io.h>
 #include <avr/wdt.h>
@@ -23,9 +21,9 @@
 #include <CapacitiveSensor.h>
 #include <Wire.h>
 
+#include "Arduino.h"
 #include "photuris.h"
 #include <photuris_utilities.h>
-
 
 // Global Variables
 long displayLED = 0;

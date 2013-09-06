@@ -8,6 +8,11 @@
  * Date:   2013/09/03 - 2013/09/03
  **********************************************************/
 
+#include <avr/io.h>
+#include <avr/wdt.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+
 // Ensure this library description is only included once.
 #ifndef photuris_h
 #define photuris_h
@@ -60,14 +65,15 @@
 #define ctlLEDD 6
 #define slide_8 7
 
+/*
 // Useful functions
-void delay_us(uint16_t count) {
+void delay_us(int count) {
     while(count--) {
         _delay_us(1);
     }
 }
 
-void delay_ms(uint16_t count) {
+void delay_ms(int count) {
     while(count--) {
         _delay_ms(1);
     }
@@ -90,5 +96,6 @@ void startBootloader(void) {
 
     jump_to_bootloader();
 }
+*/
 
 #endif // photuris_h

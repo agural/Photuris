@@ -8,10 +8,62 @@
  * Date:   2013/08/07 - 2013/09/04
  **********************************************************/
 
-#include "photuris.h"
-#include "photuris_utitlities.h"
-
 #include <math.h>
+#include <avr/io.h>
+
+#include "Arduino.h"
+#include "photuris.h"
+#include "photuris_utilities.h"
+
+/*** Useful Functions ***/
+
+void delay_us(int count) {
+    while(count > 100) {
+        _delay_us(100);
+        count -= 100;
+    }
+    while(count > 10) {
+        _delay_us(10);
+        count -= 10;
+    }
+    while(count > 0) {
+        _delay_us(1);
+        count -= 1;
+    }
+}
+
+void delay_ms(int count) {
+    while(count > 100) {
+        _delay_us(100);
+        count -= 100;
+    }
+    while(count > 10) {
+        _delay_ms(10);
+        count -= 10;
+    }
+    while(count > 0) {
+        _delay_ms(1);
+        count -= 1;
+    }
+}
+
+/*** Bootloading ***/
+
+void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
+
+void startBootloader(void) {
+    cbi(TIMSK0, TOIE0);
+    cbi(ADCSRA, ADIE);
+    cbi(ADCSRA, ADEN);
+    cli();
+    wdt_disable();
+
+    PORTB = 0;
+    PORTC = 0;
+    PORTD = 0;
+
+    jump_to_bootloader();
+}
 
 /*** Battery Utilities ***/
 
@@ -36,13 +88,33 @@ float getBatteryVoltage() {
 // Returns the theoretical (modeled) voltage you would expect after using a
 // given fraction of the total charge of the battery.
 // @usage - Fraction of the battery's charge used [0..1].
-float getVoltageFromUsage(float usage) {
+/*float getVoltageFromUsage(float usage) {
     // This formula is based on the AW IMR discharge curve.
     float voltage = 4.2 - 0.32 * log(8 * usage + 1) - exp(30 * (usage - 1));
     return voltage;
+}*/
+
+float getUsageFromVoltage(float voltage) {
+    float v0 = 1;
+    float v1 = v0 * v1;
+    float v2 = v1 * v1;
+    float v3 = v2 * v1;
+    if(voltage < 2.5) {
+        return -1;
+    }
+    if(voltage < 3.42566) {
+        return 0.220054 * v3 - 1.87041 * v2 + 5.33235 * v1 - 5.08348;
+    }
+    if(voltage < 3.55914) {
+        return 46.2142 * v3 - 476.7 * v2 + 1639.37 * v1 - 1879.54;
+    }
+    if(voltage < 4.2) {
+        return 1.85736 * v3 - 23.3898 * v2 + 98.6768 * v1 - 138.452;
+    }
+    return 1.0;
 }
 
-
+/*
 // Returns the percent charge of the battery [0..100] or -1 if charging.
 // Uses a Li-Ion IMR discharge curve to approximate energy percentage
 // (as opposed to just using the direct voltage level).
@@ -62,6 +134,13 @@ int getBatteryPercent() {
         }
     }
     return (int)(pLower * 100);
+}*/
+
+int getBatteryPercent() {
+    float voltage = getBatteryVoltage();
+    float usage = getUsageFromVoltage(voltage);
+    if(usage < 0) return -1;
+    return 100 * usage;
 }
 
 // Returns true if currently charging and false otherwise.
@@ -84,7 +163,7 @@ int chipTempRaw(void) {
 // High: 45*C
 float getTemperature() {
     int kTempSamples = 100;
-    float avg;
+    float avg = 0.0;
     ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
     delay(10);
     chipTempRaw();
