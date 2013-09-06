@@ -8,6 +8,7 @@
  * Date:   2013/08/07 - 2013/09/04
  **********************************************************/
 
+#include "photuris.h"
 #include "photuris_utitlities.h"
 
 #include <math.h>
@@ -114,7 +115,8 @@ float getTemperature() {
 //      * 1: Temperature high
 //      * 2: Temperature critically high
 //      * 3: Temperature critically low
-int systemCheck() {
+/*int systemCheck() {
     // TODO
     return 0;
-}
+}*/
+

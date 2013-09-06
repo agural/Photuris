@@ -24,7 +24,7 @@
 #include <Wire.h>
 
 #include "photuris.h"
-//#include <photuris_utilities.h>
+#include <photuris_utilities.h>
 
 
 // Global Variables
@@ -493,7 +493,7 @@ void loop() {
             display_led(brightness << 1, 5, 10);
         }
         on(0,0);
-        display_led(1 << batteryLevel(), 500, 10);
+        display_led(getBatteryPercent(), 500, 10);
         for(byte brightness = 0; brightness < 255; brightness++) {
             wdt_reset();
             on(brightness, 0);
@@ -506,9 +506,9 @@ void loop() {
         }
         off();
         display_led(1023, 1000, 10);
-        if(batteryLevel() < 6) {
-            while(batteryLevel() < 7)
-                display_led(1 << batteryLevel(), 10, 10);
+        if(getBatteryPercent() < 50) {
+            while(getBatteryPercent() < 60)
+                display_led(getBatteryPercent(), 10, 10);
         }
     }
     /*

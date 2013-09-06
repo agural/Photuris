@@ -1,7 +1,7 @@
 # Albert Gural
 # e: ag@albertgural.com
 # w: http://albertgural.com
-# d: 2013/08/18 - 2013/08/18
+# d: 2013/08/18 - 2013/09/05
 
 MCU=atmega168p                      # ATmega168 MCU.
 CPU=12000000L                       # 12 MHz external clock.
@@ -15,6 +15,7 @@ LFUSE=0xD6                          # External full-swing crystal, no clock spee
 HFUSE=0xDD                          # WDT not always on, EEPROM no save on reprogram, BOD=2.7V
 EFUSE=0xF9                          # Bootloader 1024 words (app: 0x000-0xBFF, boot: 0xC00-0xFFF)
 LIB=CapacitiveSensor Wire
+PHOTURIS_LIB=$(AP_PATH)lib
 
 CC=avr-gcc
 CCP=avr-g++
@@ -29,14 +30,14 @@ HEXFLAGS=-O ihex -R .eeprom
 AVRDUDEFLAGS=-c $(PROGRAMMER) -p $(MCU) -P $(PORT) -b $(BAUDRATE)
 
 LIBINCS=$(addprefix $(AP_PATH)arduino/libraries/,$(LIB))
-INCLUDE:=$(addprefix -I,$(shell find $(LIBINCS) -type d -not -path "*/examples*"))
+INCLUDE:=$(addprefix -I,$(shell find $(LIBINCS) -type d -not -path "*/examples*")) -I$(PHOTURIS_LIB)
 ARFILE=$(AP_PATH)arduino/core.a
 OBJECTS_PROJECT=$(SOURCES_PROJECT:.cpp=.o)
 
-SOURCES_ARDUINO_C:=$(shell find $(AP_PATH)arduino -name '*.c' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.c')
+SOURCES_ARDUINO_C:=$(shell find $(AP_PATH)arduino -name '*.c' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.c') $(shell find $(PHOTURIS_LIB) -name '*.c')
 OBJECTS_ARDUINO_C=$(SOURCES_ARDUINO_C:.c=.o)
 
-SOURCES_ARDUINO_CPP:=$(shell find $(AP_PATH)arduino -name '*.cpp' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.cpp')
+SOURCES_ARDUINO_CPP:=$(shell find $(AP_PATH)arduino -name '*.cpp' -not -path "*/libraries*") $(shell find $(LIBINCS) -name '*.cpp') $(shell find $(PHOTURIS_LIB) -name '*.cpp')
 OBJECTS_ARDUINO_CPP=$(SOURCES_ARDUINO_CPP:.cpp=.o)
 
 OBJECTS=$(OBJECTS_PROJECT) $(OBJECTS_ARDUINO_C) $(OBJECTS_ARDUINO_CPP)
