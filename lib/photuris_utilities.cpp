@@ -49,9 +49,9 @@ void delay_ms(int count) {
 
 /*** Bootloading ***/
 
-void (*jump_to_bootloader)(void) = (void (*)())0x1C00; __attribute__ ((unused))
+void (*jump_to_bootloader)() = (void (*)())0x1C00; __attribute__ ((unused))
 
-void startBootloader(void) {
+void startBootloader() {
     cbi(TIMSK0, TOIE0);
     cbi(ADCSRA, ADIE);
     cbi(ADCSRA, ADEN);
@@ -73,7 +73,9 @@ void startBootloader(void) {
 // Fully discharged: 2.7V
 // Connected to charger: -1V
 float getBatteryVoltage() {
+    cbi(PORTC, 3);
     cbi(DDRC, 3);
+    delay(1);
 
     // 238.14 = 1024 [Full ADC Range] * 10/43 [Resistor Divider]
     const float kVoltageConvert = REFERENCE_VOLTAGE / 238.14;
@@ -95,8 +97,7 @@ float getBatteryVoltage() {
 }*/
 
 float getUsageFromVoltage(float voltage) {
-    float v0 = 1;
-    float v1 = v0 * v1;
+    float v1 = voltage;
     float v2 = v1 * v1;
     float v3 = v2 * v1;
     if(voltage < 2.5) {
@@ -140,7 +141,7 @@ int getBatteryPercent() {
     float voltage = getBatteryVoltage();
     float usage = getUsageFromVoltage(voltage);
     if(usage < 0) return -1;
-    return 100 * usage;
+    return (int)(100 * usage);
 }
 
 // Returns true if currently charging and false otherwise.
@@ -152,7 +153,7 @@ bool isCharging() {
 /*** Temperature Utilities ***/
 
 // Returns the raw ADC output for a temperature sample.
-int chipTempRaw(void) {
+int chipTempRaw() {
     ADCSRA |= _BV(ADSC);
     while((ADCSRA & _BV(ADSC)));
     return (ADCL | (ADCH << 8));
@@ -161,7 +162,7 @@ int chipTempRaw(void) {
 // Returns the current temperature in *C.
 // Very high: 50*C
 // High: 45*C
-float getTemperature() {
+int getTemperature() {
     int kTempSamples = 100;
     float avg = 0.0;
     ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
@@ -176,7 +177,7 @@ float getTemperature() {
     // Interestingly, the value of average is very close to the actual
     // temperature in kelvin. Too bad it's not exact.
     avg = 1.01 * avg - 272;
-    return avg;
+    return (int)avg;
 }
 
 /*** System Utilities ***/

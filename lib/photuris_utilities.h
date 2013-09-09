@@ -47,6 +47,6 @@ bool isCharging();
 #define LOW_THRESH_TEMPERATURE 0
 #define MIN_LED_TEMPERATURE -10
 
-float getTemperature();
+int getTemperature();
 
 #endif // photuris_utilities_h

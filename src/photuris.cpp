@@ -478,7 +478,7 @@ void loop() {
 
     while(true) {
         wdt_reset();
-        for(byte brightness = 0; brightness < 201; brightness++) {
+        /*for(byte brightness = 0; brightness < 201; brightness++) {
             wdt_reset();
             on(brightness, brightness);
             //display_led(1 << batteryLevel(), 10, 10);
@@ -490,9 +490,12 @@ void loop() {
             //display_led(1 << batteryLevel(), 10, 10);
             display_led(brightness << 1, 5, 10);
         }
-        on(0,0);
-        display_led(getBatteryPercent(), 500, 10);
-        for(byte brightness = 0; brightness < 255; brightness++) {
+        on(0,0);*/
+        display_led(512, 250, 10);
+        display_led(((int)(10 * getBatteryVoltage())) << 1, 500, 10);
+        display_led(1, 250, 10);
+        display_led(getBatteryPercent() << 1, 500, 10);
+        /*for(byte brightness = 0; brightness < 255; brightness++) {
             wdt_reset();
             on(brightness, 0);
             display_led(512 + (brightness << 1), 10, 10);
@@ -503,11 +506,12 @@ void loop() {
             display_led(1 + (brightness << 1), 10, 10);
         }
         off();
-        display_led(1023, 1000, 10);
+        display_led(((int)getTemperature()) << 1, 500, 10);*/
+        /*display_led(1023, 1000, 10);
         if(getBatteryPercent() < 50) {
             while(getBatteryPercent() < 60)
                 display_led(getBatteryPercent(), 10, 10);
-        }
+        }*/
     }
     /*
     while(true) {

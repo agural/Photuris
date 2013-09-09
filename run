@@ -10,8 +10,8 @@ elif [ "$1" = "bootflash" ]; then
     cd bootload/firmware
     make all
     sudo make flash
-    make clean
     cd ../..
+    make clean
 elif [ "$1" = "bootload" ]; then
     make all
     cd bootload/commandline
