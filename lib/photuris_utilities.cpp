@@ -152,31 +152,30 @@ bool isCharging() {
 
 /*** Temperature Utilities ***/
 
-// Returns the raw ADC output for a temperature sample.
-int chipTempRaw() {
-    ADCSRA |= _BV(ADSC);
-    while((ADCSRA & _BV(ADSC)));
-    return (ADCL | (ADCH << 8));
-}
-
 // Returns the current temperature in *C.
 // Very high: 50*C
 // High: 45*C
 int getTemperature() {
-    int kTempSamples = 100;
+    int kTempSamples = 1000;
     float avg = 0.0;
-    ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
-    delay(10);
-    chipTempRaw();
+    int throwout;
+    ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX3);
+    sbi(ADCSRA, ADEN);
 
-    for(int i = 1; i < kTempSamples; i++) {
-        avg += chipTempRaw();
+    delay_ms(10);
+    for(int i = 0; i < 10; i++) {
+        sbi(ADCSRA, ADSC);
+        while(gbi(ADCSRA, ADSC));
+        throwout = ADCW;
+    }
+    for(int i = 0; i < kTempSamples; i++) {
+        sbi(ADCSRA, ADSC);
+        while(gbi(ADCSRA, ADSC));
+        avg += (float)ADCW;
     }
     avg /= kTempSamples;
 
-    // Interestingly, the value of average is very close to the actual
-    // temperature in kelvin. Too bad it's not exact.
-    avg = 1.01 * avg - 272;
+    avg = (avg - 79);
     return (int)avg;
 }
 
