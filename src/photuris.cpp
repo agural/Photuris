@@ -18,39 +18,19 @@
 #include <avr/power.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <CapacitiveSensor.h>
 #include <Wire.h>
 
 #include "Arduino.h"
 #include "photuris.h"
 #include <photuris_utilities.h>
+#include <photuris_interface.h>
 
 // Global Variables
 long displayLED = 0;
 int  mode = 0;
 
 /********** CAPACITIVE TOUCH SENSORS **********/
-
-#define slide_MA A2
-#define slide_MB A1
-#define slide_S0 8
-#define slide_S1 1
-#define slide_S3 2
-#define slide_S6 4
-#define slide_S8 1
-#define slide_S9 1
-
-CapacitiveSensor csM0 = CapacitiveSensor(slide_MB, slide_MA);
-CapacitiveSensor csM1 = CapacitiveSensor(slide_MA, slide_MB);
-CapacitiveSensor csS0 = CapacitiveSensor(slide_S9, slide_S0);
-CapacitiveSensor csS9 = CapacitiveSensor(slide_S0, slide_S9);
-CapacitiveSensor csLL = CapacitiveSensor(slide_S6, slide_S8);
-CapacitiveSensor csLR = CapacitiveSensor(slide_S8, slide_S6);
-CapacitiveSensor csML = CapacitiveSensor(slide_S3, slide_S6);
-CapacitiveSensor csMR = CapacitiveSensor(slide_S6, slide_S3);
-CapacitiveSensor csRL = CapacitiveSensor(slide_S1, slide_S3);
-CapacitiveSensor csRR = CapacitiveSensor(slide_S3, slide_S1);
-
+/*
 double main_switch(int samples) {
     long total = 0;
     for(int i = 0; i < samples; i++) {
@@ -102,7 +82,7 @@ double slider(int samples, int threshold) {
     // TODO
     return -1;
 }
-
+*/
 /*
 // Outputs position of slider touch (0 <= x < 32) or -1 if there is no touch
 double slider() {
@@ -445,7 +425,7 @@ void setup() {
 
 void loop() {
     wdt_reset();
-    if(analogRead(A3) < 50 && gbi(PINB, 5)) {
+    if(analogRead(A3) < 50 && gbi(PINB, 5) && getMainSwitchState(5)) {
         display_led(513, 500, 10);
         startBootloader();
     }
@@ -475,6 +455,13 @@ void loop() {
             display_led(i << 1, 1000, 10);
         }
     }*/
+
+    while(true) {
+        wdt_reset();
+        //display_led(getSlideRaw(0) << 1, 50, 10);
+        display_led((0x5000) | (getMainSwitchFrontRaw() << 1), 50, 10);
+        display_led((0x2800) | (getMainSwitchBackRaw() << 1), 50, 10);
+    }
 
     while(true) {
         wdt_reset();
